@@ -3,6 +3,9 @@ package com.softiv.todo.domain;
 import com.softiv.todo.enums.TaskPriority;
 import com.softiv.todo.enums.TaskStatus;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -10,9 +13,8 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table
 @Data
-public class Task {
+public class Task extends Auditable<String>{
     @Id
     @GeneratedValue
     private Long id;
@@ -24,19 +26,13 @@ public class Task {
     @Column
     private TaskStatus status;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
-    public Date createdAt;
-
-    @Column(name = "updated_at", updatable = false, insertable = false)
-    public Date updatedAt;
-
     @Version
     public int version;
 
     @Column
     private TaskPriority priority;
 
-//    @Column
-//    private Set<Task> subtasks;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Task> subtasks;
 
 }
